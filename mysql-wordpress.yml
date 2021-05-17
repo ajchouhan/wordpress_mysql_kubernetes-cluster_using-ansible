@@ -1,0 +1,48 @@
+
+ - hosts: master
+   vars:
+          
+           mysql_pod_name: mysql
+           wp_pod_name: wp
+           wp_db_name: wp
+           wp_user: ajay
+           wp_pass: redhat
+         
+   tasks: 
+    
+   - name: "create a mysql pod"
+     command: "kubectl run mysql --image=mysql:5.7 --env=MYSQL_ROOT_PASSWORD=redhat --env=MYSQL_DATABASE=wp  --env=MYSQL_USER=ajay --env=MYSQL_PASSWORD=redhat"
+   - name:
+     pause:
+             minutes: 1
+     
+   - name: "Database details"
+     command: kubectl describe pod mysql     
+     register: x
+
+   - name: "details- IP of mysql"
+     debug: 
+        var:  x['stdout_lines'][10][7:19]
+     register: y
+
+
+   - name: "print all available facts"
+     command: kubectl -o yaml  get pod  mysql 
+     register: z
+
+   - name: " Displaying DB Detail"
+     debug:
+         var: z.stdout| from_yaml
+     register: p
+
+   - name: "try"
+     debug:
+             var: p['z.stdout| from_yaml']['status']['podIP']
+     
+    # z.stdout| from_yaml  [items][0][status][podIP]
+
+
+   - name: "Create Wordpress pod"
+     command: "kubectl run wp --image=wordpress:5.1.1-php7.3-apache --env=WORDPRESS_DB_USER={{ wp_user }}  --env=WORDPRESS_DB_HOST={{  x['stdout_lines'][10][7:19] }} --env=WORDPRESS_DB_PASSWORD={{ wp_pass }} --env=WORDPRESS_DB_NAME={{ wp_db_name}}"
+   - name: "Wordpress Exposed"
+     command: "kubectl expose pod  {{ wp_pod_name }} --port=80 --type=NodePort" 

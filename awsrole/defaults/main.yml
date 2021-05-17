@@ -1,0 +1,15 @@
+---
+ssh_key: "aj"
+i_type: t2.micro
+#ami: ami-010aff33ed5991201
+ami: ami-0d6cd08915fab688b
+region: "ap-south-1"
+tag_name: "hadoop_try"
+count_ins: 1
+sg_groups: sg-070a7a1c16df56527
+subnet_id:  subnet-0884a9fbbb1da7e63
+access_key: AKIASA6JLKA**********
+secret_key: i4L2dG+OQbZ**************
+
+
+# defaults file for awsrole
