@@ -37,7 +37,9 @@
    - name: "create a mysql pod"
      command: "kubectl run mysql --image=mysql:5.7 --env=MYSQL_ROOT_PASSWORD=redhat --env=MYSQL_DATABASE=wp  --env=MYSQL_USER=ajay --env=MYSQL_PASSWORD=redhat"
    
-
+   - name: "pause for a minutes"
+     pause:
+         minutes: 1
    - name: "Database details"
      command: kubectl describe pod mysql     
      register: x
